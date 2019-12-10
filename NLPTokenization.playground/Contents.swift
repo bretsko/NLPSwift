@@ -1,4 +1,6 @@
-import UIKit
+//: Playground - noun: a place where people can play
+
+import Foundation
 
 let inputString = "Delhi, India’s capital territory, is a massive metropolitan area in the country’s north. In Old Delhi, a neighborhood dating to the 1600s, stands the imposing Mughal-era Red Fort, a symbol of India, and the sprawling Jama Masjid mosque, whose courtyard accommodates 25,000 people. Nearby is Chandni Chowk, a vibrant bazaar filled with food carts, sweets shops and spice stalls."
 
@@ -15,14 +17,18 @@ let tagger = NSLinguisticTagger(tagSchemes: [NSLinguisticTagScheme.tokenType, .l
 
 let options: NSLinguisticTagger.Options = [NSLinguisticTagger.Options.omitPunctuation, .omitWhitespace, .joinNames]
 
-// ******************************************
-// Language identification
-// here we will give input string to the tagger and ask the dominant language in the string.
-// Dominant language is the most frequently occurring language in the string so if our string had mix of english, hindi, spanish and french words then it would choose the most common language
+var str = "Hello, playground"
 
-func languageIdentification() {
+func tokenizeString() {
     tagger.string = inputString
-    print(tagger.dominantLanguage!)
+    
+    let range = NSRange(location: 0, length: inputString.utf16.count)
+    
+    tagger.enumerateTags(in: range, unit: NSLinguisticTaggerUnit.word, scheme: NSLinguisticTagScheme.tokenType, options: options) { (tag, tokenRange, _) in
+        
+        let word = (inputString as NSString).substring(with: tokenRange)
+        print(word)
+    }
 }
 
-languageIdentification()
+tokenizeString()

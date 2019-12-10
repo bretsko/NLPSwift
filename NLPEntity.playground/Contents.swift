@@ -1,4 +1,6 @@
-import UIKit
+
+
+import Foundation
 
 let inputString = "Delhi, India’s capital territory, is a massive metropolitan area in the country’s north. In Old Delhi, a neighborhood dating to the 1600s, stands the imposing Mughal-era Red Fort, a symbol of India, and the sprawling Jama Masjid mosque, whose courtyard accommodates 25,000 people. Nearby is Chandni Chowk, a vibrant bazaar filled with food carts, sweets shops and spice stalls."
 
@@ -15,18 +17,24 @@ let tagger = NSLinguisticTagger(tagSchemes: [NSLinguisticTagScheme.tokenType, .l
 
 let options: NSLinguisticTagger.Options = [NSLinguisticTagger.Options.omitPunctuation, .omitWhitespace, .joinNames]
 
-// Parts of Speech
+// Named Entity Recognition
 
-func partOfSpeech() {
-    tagger.string = inputString
-    let range = NSRange(location: 0, length: inputString.utf16.count)
+func namedEntity(str: String) {
+    tagger.string = str
     
-    tagger.enumerateTags(in: range, unit: NSLinguisticTaggerUnit.word, scheme: NSLinguisticTagScheme.lexicalClass, options: options) { (tag, tokenRange, _) in
-        if let tag = tag {
-            let word = (inputString as NSString).substring(with: tokenRange)
-            print("\(tag.rawValue) -> \(word)")
+    let range = NSRange(location: 0, length: str.utf16.count)
+    
+    let tags: [NSLinguisticTag] = [NSLinguisticTag.personalName, .placeName, .organizationName]
+    
+    tagger.enumerateTags(in: range, unit: NSLinguisticTaggerUnit.word, scheme: NSLinguisticTagScheme.nameType, options: options) { (tag, tokenRange, _) in
+        
+        if let tag = tag, tags.contains(tag) {
+            let name = (str as NSString).substring(with: tokenRange)
+            print("\(name) : \(tag.rawValue)")
         }
+        
     }
 }
 
-partOfSpeech()
+namedEntity(str: inputString)
+

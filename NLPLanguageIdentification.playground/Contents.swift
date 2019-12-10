@@ -1,6 +1,7 @@
-import UIKit
+import Foundation
 
 let inputString = "Delhi, India’s capital territory, is a massive metropolitan area in the country’s north. In Old Delhi, a neighborhood dating to the 1600s, stands the imposing Mughal-era Red Fort, a symbol of India, and the sprawling Jama Masjid mosque, whose courtyard accommodates 25,000 people. Nearby is Chandni Chowk, a vibrant bazaar filled with food carts, sweets shops and spice stalls."
+
 
 // tag schemes: tag schemes are constants that are used to identify pieces of information that we want from the input text. Tag schemes asks tagger to look for informations like
 // Token type: a contant to classify each character as a word, punctuation or a whitespace
@@ -15,21 +16,13 @@ let tagger = NSLinguisticTagger(tagSchemes: [NSLinguisticTagScheme.tokenType, .l
 let options: NSLinguisticTagger.Options = [NSLinguisticTagger.Options.omitPunctuation, .omitWhitespace, .joinNames]
 
 // ******************************************
-// Lemmatization
+// Language identification
+// here we will give input string to the tagger and ask the dominant language in the string.
+// Dominant language is the most frequently occurring language in the string so if our string had mix of english, hindi, spanish and french words then it would choose the most common language
 
-// Lemmatization is the process of breaking down word into its most basic form. For example, "go" can be transformed into "gone", "will go", "went" etc and since therere are so many forms for NLP to understand it better the words are converted into their base root, like in this case all the above forms transform to "go" and this "go" is known as Lemma
-
-func lemmatizeString() {
+func languageIdentification() {
     tagger.string = inputString
-    
-    let range = NSRange(location: 0, length: inputString.utf16.count)
-    
-    tagger.enumerateTags(in: range, unit: NSLinguisticTaggerUnit.word, scheme: NSLinguisticTagScheme.lemma, options: options) { (tag, tokenRange, _) in
-        if let lemma = tag?.rawValue {
-            print(lemma)
-        }
-    }
+    print(tagger.dominantLanguage!)
 }
 
-lemmatizeString()
-
+languageIdentification()
